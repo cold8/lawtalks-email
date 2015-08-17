@@ -11,12 +11,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var send = require('./send.js');
 
-app.all('*', function(err, req, res, next) {
-	next();
+app.all('*', function(req, res, next){
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
+    res.set('Access-Control-Max-Age', 60*60*24*30);
+    res.set('Access-Control-Expose-Headers', 'Content-Range');
+    if ('OPTIONS' == req.method) return res.send(200);
+    next();
 });
 
-app.get('/', function(req, res) {
-    res.send('lawtalks');
+app.get('/service/mailer', function(req, res) {
+    res.send('lawtalks email');
 });
 
 app.post('/service/mailer/intern', send.intern);
